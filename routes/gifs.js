@@ -1,41 +1,47 @@
-const axios = require('axios').default;
-const express = require('express');
+const axios = require("axios").default;
+const express = require("express");
 const router = express.Router();
-require('dotenv').config();
 
-const baseURL = 'https://api.giphy.com/v1/';
+require("dotenv").config();
+
+const baseURL = "https://api.giphy.com/v1/";
 const key = `?api_key=${process.env.API_KEY}&`;
 
 const actionsLocation = {
-  SEARCH: 'gifs/search',
-  GET_GIF: 'gifs/',
-  GET_GIFS: 'gifs',
-  GET_CATEGORIES: 'gifs/categories',
-  GET_TRENDS: 'gifs/trending',
+  SEARCH: "gifs/search",
+  GET_GIF: "gifs/",
+  GET_GIFS: "gifs",
+  GET_CATEGORIES: "gifs/categories",
+  GET_TRENDS: "gifs/trending",
 };
 
 for (let action in actionsLocation) {
-  if (action === 'GET_GIF') continue;
+  if (action === "GET_GIF") continue;
   actionsLocation[action] += key;
 }
 
-router.get('/search', async (req, res) => {
+router.get("/search", async (req, res) => {
   const q = req.query.q;
   try {
-    const results = await axios.get(`${baseURL}${actionsLocation.SEARCH}q=${q}`);
-    // console.log('i did it!');
+    const results = await axios.get(
+      `${baseURL}${actionsLocation.SEARCH}q=${q}`
+    );
+
     const { data } = results.data;
+
     res.send(data);
   } catch (err) {
     res.send(err);
   }
 });
 
-router.get('/gif', async (req, res) => {
+router.get("/gif", async (req, res) => {
   const id = req.query.id;
 
   try {
-    const results = await axios.get(`${baseURL}${actionsLocation.GET_GIF}${id}${key}`);
+    const results = await axios.get(
+      `${baseURL}${actionsLocation.GET_GIF}${id}${key}`
+    );
     const { data } = results;
 
     res.send(data);
@@ -44,12 +50,14 @@ router.get('/gif', async (req, res) => {
   }
 });
 
-router.get('/gifs', async (req, res) => {
+router.get("/gifs", async (req, res) => {
   const ids = req.query.ids;
-  const amountOfIds = ids.split(',').length;
+  const amountOfIds = ids.split(",").length;
 
   try {
-    const results = await axios.get(`${baseURL}${actionsLocation.GET_GIFS}ids=${ids}`);
+    const results = await axios.get(
+      `${baseURL}${actionsLocation.GET_GIFS}ids=${ids}`
+    );
     const { data } = results;
 
     const gotAllResults = data.data.length === amountOfIds;
@@ -63,9 +71,11 @@ router.get('/gifs', async (req, res) => {
 });
 
 // can search categories using basic search at '/search'
-router.get('/categories', async (_, res) => {
+router.get("/categories", async (_, res) => {
   try {
-    const results = await axios.get(`${baseURL}${actionsLocation.GET_CATEGORIES}`);
+    const results = await axios.get(
+      `${baseURL}${actionsLocation.GET_CATEGORIES}`
+    );
     const { data } = results;
 
     res.send(data);
@@ -74,7 +84,7 @@ router.get('/categories', async (_, res) => {
   }
 });
 
-router.get('/trending', async (_, res) => {
+router.get("/trending", async (_, res) => {
   try {
     const results = await axios.get(`${baseURL}${actionsLocation.GET_TRENDS}`);
     const { data } = results;
