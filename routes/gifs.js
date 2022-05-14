@@ -62,6 +62,7 @@ router.get('/gifs', async (req, res) => {
   }
 });
 
+// can search categories using basic search at '/search'
 router.get('/categories', async (_, res) => {
   try {
     const results = await axios.get(`${baseURL}${actionsLocation.GET_CATEGORIES}`);
