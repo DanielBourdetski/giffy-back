@@ -22,9 +22,12 @@ for (let action in actionsLocation) {
 
 //  /gifs/search?q=
 router.get('/search', async (req, res) => {
+  // limit should default to 25 by front
+  const limit = req.query.limit;
   const q = req.query.q;
+
   try {
-    const results = await axios.get(`${baseURL}${actionsLocation.SEARCH}q=${q}`);
+    const results = await axios.get(`${baseURL}${actionsLocation.SEARCH}q=${q}&limit=${limit}`);
 
     const { data } = results.data;
 
@@ -37,6 +40,8 @@ router.get('/search', async (req, res) => {
 //  /gifs/gif?id=
 router.get('/gif', async (req, res) => {
   const id = req.query.id;
+
+  console.log('gif by id');
 
   try {
     const results = await axios.get(`${baseURL}${actionsLocation.GET_GIF}${id}${key}`);
@@ -52,6 +57,7 @@ router.get('/gif', async (req, res) => {
 router.get('/gifs', async (req, res) => {
   // TODO get rid of spaces in ids:  ids -> .split(' ') -> .trim() -> .join('')
   const ids = req.query.ids;
+  console.log(ids);
   const amountOfIds = ids.split(',').length;
 
   try {
